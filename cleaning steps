@@ -1,1 +1,68 @@
+To begin cleaning, I opened the .csv file on my notepad and saved it as a .txt file. i then imported the file into excel.
+after which i converted my range into a table. It is worthy to note that the file had 18979 columns and 77 rows.
 
+The ID's were unique sets of numbers, and no duplicate was found, meaning it was good to go. 
+
+Moved to the PlayerNames, comprising of NAMES and LongNames. The PlayerNames had special characters that had to be cleaned.
+However, "CLEAN FUNCTION" could not be used because excel couldn't understabd the characters. 
+The PlayerUrl contained the LongNames, so i extracted it using MID, FIND, LEN, PROPER and SUBSTITUTE FUNCTIONS" in the formula below
+
+=SUBSTITUTE(PROPER(MID([@playerUrl],FIND("/",[@playerUrl],29)+1,LEN([@playerUrl])-FIND("/",[@playerUrl],29)-8)),"-"," ")
+
+The MID FUNCTION extracted the LongNames of the players from the playerUrl using "/" as a delimiter. Because the playerUrl had more than one "/",
+i used the FIND FUNCTION to select the specific "/" i would use as my delimiter.
+The PROPER FUNCTION was used to format the text into proper text format, i.e. Capitalizing each word.
+The SUBSTITUTE FUNCTION replaced the "-" in the text with a space(" ")
+
+The PhotoURL and PlayerURL columns contained links to the player image and details respectively.
+These columns were both hidden from the overall dataset.
+
+The Nationality, Age and Club columns had some repeating values, but this is absolutely normal, since clubs,
+countries have more than a single player, and there is no 'monopoly" of Age
+
+The CONTRACT column (oh my word!) had inconsistencies in the data.
+it contained the "start year" and "end year" of some players contract, dates of players "on loan" and also players who are "free agents".
+
+To clean this, i created two new columns to hold the "CONTRACT START YEAR" and "CONTRACT END YEAR" i used the formulas
+
+=IF(LEN([@[Contract Start Yr]])= 11, LEFT([@[Contract Start Yr]],4),"null")
+and
+=IF(LEN([@[Contract Start Yr]])= 11, RIGHT([@[Contract Start Yr]],4),"null")
+
+Since all valid CONTRACT YEAR had 11 characters, i used the IF and LEN FUNCTION to check for the length of the string,
+and then return the CONTRACT START YEAR(LEFT FUNTION) or The CONTRACT END YEAR (RIGHT FUNCTION) respectively, whle returning "null" for the players on loan and free transfer.
+
+The column that showed the different positions of each player was removed because it was repetitive and 
+included additional positions if the player played in more than one position.
+There was already another column that showed the player's best position.
+
+The 'HEIGHT' and 'WEIGHT' COLUMNS were stored in text format and had inconsostencies in their units, for the WEIGHT "75kg and 171lbs" while the HEIGHT was in "172cm and 5'11""
+To clean these, i created two extra columns. 
+
+For the HEIGHT COLUMNS;
+I used FIND and REPLACE to delete the """, and used "'" as a delimiter to seperate the "ft and in".
+i converted them to cm using
+=INT(CONVERT([@Column7],"ft","cm") + CONVERT([@Column8], "in","cm"))
+
+For the WEIGHT COLUMNS;
+I used 
+=INT(CONVERT(LEFT([@Weight],FIND("l",[@Weight])-1),"lbm","kg")) 
+to convert the lbs to kg, this however brought an error for cells already in kg. So i used 
+=IF(ISERROR([@Column7]),LEFT([@Weight],FIND("k",[@Weight])-1),[@Column7])
+to merge both weights, keeping them in number format. Renamed the WEIGHT column to include the units.
+
+For the VALUE, WAGE and RELEASE CLAUSE COLUMNS, i used similar formula to clean and convert to number format.
+
+=IF(RIGHT([@Value],1) = "m",LEFT([@Value],LEN([@Value]) -1) * 1000000,IF(RIGHT([@Value],1) = "k",LEFT([@Value],LEN([@Value])-1)*1000,IFERROR([@Value],0)))
+
+The IR, W/F and SM COLUMNS had a special character "★", with unicode '9733'. The formula below was used to clean the character.
+
+=LEFT([@IR],1)
+
+The Attacking, Crossing, Finishing, Heading_accuracy, short_passing, Volleys, Skill, Dribbling, Curve, Fk-accuracy, Long-passing,
+Ball-control, Movement, Acceleration, ‘Spring-speed, Agility, Reactions, Balance, Power, Shot-Power, Jumping, Stamina, Strength, Long-shot, Mentality,
+Aggression, Interception, Positioning, Vision, Penalties, Composure, Defending, Marking, Standing-tackle, Sliding_tackle,
+Goalkeeping, Gk-handling, Gk-diving, Gk-kicking, Gk-positioning, Gk-reflexes, Total-stats, Base-stats, Pace, Shooting, Passing, DRI, DEF,
+physicality, Best-position, Preferred-foot columns
+
+were all converted to number format, and hidden from the main table. 
