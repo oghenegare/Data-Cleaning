@@ -1,0 +1,10 @@
+Data cleaning refers to the process of identifying and correcting or removing errors, inconsistencies, and inaccuracies from a dataset.
+It is an essential step in data analysis because it ensures that the data is accurate, complete, and consistent,
+which in turn leads to more reliable and accurate insights.
+
+Data cleaning involves several tasks such as removing duplicate data, correcting misspellings, filling in missing values, standardizing data formats,
+and identifying and removing outliers. The ultimate goal is to transform the raw data into a clean and organized dataset that can be used for analysis.
+
+Overall, data cleaning is a crucial step in any data analysis project, as it ensures that the insights drawn from the data are valid and reliable,
+and can be used to make informed decisions.
+
